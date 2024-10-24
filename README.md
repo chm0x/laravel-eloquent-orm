@@ -37,7 +37,7 @@ Eloquent offers a set of model conventions, including naming conventions for tab
 > php artisan make:model Post --resource -mfs
 ```
 
-## CHANGING TABLE NAME
+## CHANGING NAMING CONVENTION FROM ELOQUENT
 
 By default, Eloquent assumes that the table name of the model is the Plural form of the model class name with an underscore separating each word. 
 
@@ -45,6 +45,8 @@ Example, we have `Post` model will work with a table named `posts` and the `User
 
 However, eloquent allows you to change the table name that a model represents by defining a table property within the model class.
 
+
+### TABLE NAME CONVENTION
 `app/Models/Post.php`
 ```
 class Post extends Model
@@ -53,4 +55,123 @@ class Post extends Model
     protected $table = 'table_name';
     ...
 }
+```
+
+### PRIMARY KEY CONVENTION
+
+By default, eloquent assumes the primary key for a model is an autoincrement integer named ID.
+
+You can change:
+`app/Models/Post.php`
+```
+class Post extends Model
+{
+    ...
+    # protected $primaryKey = 'column_name';
+    # Example
+    protected $primaryKey = 'slug';
+    ...
+}
+```
+It can use with `Post::find(a_slug)` method, that match the primary key.
+
+### AUTO INCREMENT FOR THE PRIMARY KEY
+
+It can disable the primary key's increment behavior. This will Eloquent not to automatically increment the primary key a new record is inserted into the DB.
+
+**Advice: Do not touch.**
+`app/Models/Post.php`
+```
+class Post extends Model
+{
+    ...
+    public $incrementing = false;
+    ...
+}
+```
+
+### CHANGING THE DATA TYPE OF THE PRIMARY KEY
+
+`app/Models/Post.php`
+```
+class Post extends Model
+{
+    ...
+    protected $keyType = 'string';
+    ...
+}
+```
+
+When you changes, it need to update any relationship.
+
+### disable created_at and updated_at columns
+
+`app/Models/Post.php`
+```
+class Post extends Model
+{
+    ...
+    public $timestamp = false;
+    ...
+}
+```
+
+You can customize the format of the timestamp
+
+Default: Y-m-d H:i:s
+`app/Models/Post.php`
+```
+class Post extends Model
+{
+    ...
+    protected $dateFormat = 'U'
+    ...
+}
+```
+
+Customize the names of the timestamps columns
+`app/Models/Post.php`
+```
+class Post extends Model
+{
+    ...
+    const CREATED_AT = 'date_created_at';
+    const UPDATED_AT = 'date_updated_at';
+    ...
+}
+```
+
+### Set Default attributes values for table
+`app/Models/Post.php`
+```
+class Post extends Model
+{
+    ...
+    protected $attributes = [
+        "user_id" => 1,
+        "is_published" => true,
+        "description" => "Please add your description"
+    ];
+    ...
+}
+```
+
+### change the DB interacting with a particular model
+Useful when working with multiples databases.
+
+`app/Models/Post.php`
+```
+class Post extends Model
+{
+    ...
+    protected $connection = 'sqlite';
+    ...
+}
+```
+
+## eloquent commands
+
+use `php artisan tinker` or if you buy `tinkerwell`.
+```
+> Post::all();
 ```
