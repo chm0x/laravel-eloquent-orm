@@ -169,6 +169,56 @@ class Post extends Model
 }
 ```
 
+## FILLIABLE & GUARDED PROPERTIES
+
+It is important to protect against mass assignment vulnerabilities.
+
+Mass assignment is a technique used to set multiple attributes of a model using an array of data. This can be a security risk if not handled correctly. Examples: password, permissions. 
+
+*(dont use them together)*
+
+Recommendation: always be careful and precise when working with both attributes. 
+
+### the $fillable property
+
+List of fields that are allowed for mass assignment. 
+
+Any field or attribute that are not listed in the $fillable property array will not be allowed to be mass assigned, so the eloquent cannot create them.
+
+`app/Models/Post.php`
+```
+class Post extends Model
+{
+    ...
+    protected $fillable = [
+        'user_id',
+        'title',
+        'slug',
+        'excerpt',
+        'description',
+        'min_to_read',
+        'is_published'
+    ];
+    ...
+}
+```
+
+### the $guarded property
+
+The $guarded property is an array that list the fields that are not allowed to be mass assigned.
+
+`app/Models/Post.php`
+```
+class Post extends Model
+{
+    ...
+    protected $guarded = [
+        'is_published'
+    ];
+    ...
+}
+```
+
 ## eloquent commands
 
 use `php artisan tinker` or if you buy `tinkerwell`.
