@@ -507,3 +507,30 @@ Post::firstOrNew( $array1, $array2 );
 Both are useful methods for avoiding duplicate data in the DB and speeding up queries. 
 
 They require more code than the create() method and slower for complex queries.
+
+
+## UPDATE
+
+**option 1**
+```
+$post = Post::find(1);
+
+$post->title        = "Test update";
+$post->slug         = "test-update";
+$post->description  = "Test description update";
+
+$post->save()
+```
+
+**option 2**
+```
+Post::where('id', 1)->update([
+    "title"        => "update OPtion 2",
+    "slug"         => "update-option-2",
+    "description"  => "Test desc: option 2 update"
+]);
+
+Post::where('is_published', false)->update([
+    "is_published" => true
+]);
+```
