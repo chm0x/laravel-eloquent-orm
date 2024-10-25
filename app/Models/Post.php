@@ -19,9 +19,6 @@ class Post extends Model
         'is_published'
     ];
 
-    protected $guarded = [
-        'is_published'
-    ];
-
+    
 
 }

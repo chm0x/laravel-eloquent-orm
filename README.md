@@ -13,6 +13,7 @@ Disadvantages: Slower than using raw SQL when working with large datasets. Diffi
 Use `tinkerwell`. Allows you to interact with your app and database using interface. 
 
 
+
 ## WHEN SHOULD WE USE ELOQUENT?
 
 Eloquent is a good choice when you need to work with databases using object oriented syntax. 
@@ -179,6 +180,8 @@ Mass assignment is a technique used to set multiple attributes of a model using 
 
 Recommendation: always be careful and precise when working with both attributes. 
 
+Only use **fillable**. 
+
 ### the $fillable property
 
 List of fields that are allowed for mass assignment. 
@@ -219,9 +222,38 @@ class Post extends Model
 }
 ```
 
-## eloquent commands
+## Building Queries
+
+Advantages: improved performance, flexibility, readability.
 
 use `php artisan tinker` or if you buy `tinkerwell`.
 ```
 > Post::all();
+```
+
+### where()
+
+```
+> Post::where('is_published', true)->get();
+
+# with cursorPaginate()
+> Post::where('is_published', true)->cursorPaginate(2);
+
+# complex queries
+> Post::where('is_published', true)
+    ->where('min_to_read', '>', 5)
+    ->orderBy('title', 'desc')
+    ->get()
+    ->count();
+
+> Post::where('is_published', true)
+        ->where('min_to_read', '>', 5)
+        ->orderBy('title', 'desc')
+        ->get();
+
+
+> Post::where('is_published', true)
+        ->where('min_to_read', '>', 5)
+        ->toSql();
+
 ```
