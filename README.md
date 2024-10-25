@@ -257,3 +257,53 @@ use `php artisan tinker` or if you buy `tinkerwell`.
         ->toSql();
 
 ```
+
+
+## Retrieving single models/record
+
+### find()
+
+This is a method used to retrieve a specifi row from the database based on the primary key.
+
+`app/Models/Post.php`
+```
+Post::find(1)
+```
+
+### first()
+
+The first() method is needed because we want to find one row based on a condition. 
+
+`app/Models/Post.php`
+```
+# If you find similar records, use where() and then first() methods
+Post::where('slug', 'requiem')->first();
+```
+
+### firstWhere()
+
+This method is used to retrieve a specific post by a custom attribute.
+`app/Models/Post.php`
+```
+Post::firstWhere('slug', 'requiem')
+```
+
+### findOrFail()
+
+This method finds by Primary key, if not exist send a null value. 
+`app/Models/Post.php`
+```
+Post::findOrFail(1)
+```
+
+### firstOrFail()
+
+This method is used to retrieve a specific row from the DB based on a custom attribute.
+`app/Models/Post.php`
+```
+Post::where('slug','requiem')
+        ->firstOrFail();
+```
+
+If not exists, return an Exception.
+
