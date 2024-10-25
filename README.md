@@ -534,3 +534,98 @@ Post::where('is_published', false)->update([
     "is_published" => true
 ]);
 ```
+
+## Attribute Changes [isDiry, isClean & wasChanged]
+
+Eloquent offers a total of 3 methods that can be used to check for changes attributes. These methods are very useful when working with models and need to **track changes to attributes**.
+
+
+### isDirty()
+
+Mainly used to determine whether an attribute in a model has been changed.
+
+**Use it before `save()` methods.**
+
+```
+$post = Post::find(1);
+$post->title = "Batman, El caballero de la noche"
+
+# returns boolean type. 
+$post->isDirty()
+
+#returns true
+$post->isDirty('title')
+
+#returns false
+$post->isDirty('excerpt')
+
+#returns boolean if one or another is changed.
+$post->isDirty(['title', 'excerpt'])
+
+if($post->isDirty('title')){
+    echo "Title has been changed";
+}else{
+    echo "Title has not been changed";
+}
+
+# BEHIND THE SCENE
+# getOriginal('value') retrieves the original value before updates.
+$post->getOriginal('title') !== $post->title
+```
+
+
+### isClean()
+
+Mainly used to determine whether there any changes to the model attributes that have not been saved to the DB.
+
+Indica que está limpio sin modificar los atributos de la tabla. 
+```
+$post = Post::find(1);
+
+# returns true
+$post->isClean()
+```
+
+```
+$post = Post::find(2);
+
+$post->title = "Joker";
+
+# returns false
+$post->isClean();
+$post->isClean('title');
+$post->isClean(['title', 'excerpt']);
+```
+
+Useful for real life: Editing a form with multiples fields, if user has made changes to one or more fields but has not submitted the form, the `isClean()` can be used to determine whether they are unsafe changes in the form.
+
+### wasChanged()
+
+This method is used to determine whether a specific attribute has been modified since the model was last saved.
+
+It returns a boolean type.
+```
+$post = Post::find(3)
+
+# returns false
+$post->wasChanged();
+$post->wasChanged('title');
+$post->wasChanged(['title', 'excerpt']);
+```
+
+```
+$post = Post::find(3)
+
+$post->title = 'some'
+
+$post->save()
+
+# returns true
+$post->wasChanged();
+
+if($post->wasChanged('title')){
+    echo "The title attribute was changed";
+}
+```
+
+Example in real life: An Ecommerce app that allows users to edit their shipping information, if a user updates their shipping address but have not yet submitted a form, the `wasChanged()` method can be used to determine whether the adverse fields have been modified.
