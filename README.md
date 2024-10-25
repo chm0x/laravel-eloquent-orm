@@ -440,3 +440,70 @@ Post::cursorPaginate(5);
 * Small data -> all()
 * Large data -> paginate() or cursorPaginate()
 
+
+## firstOrCreate() & firstOrNew()
+
+Create a new record in a DB only if it doesn't already exist or retrieve an existing record if it does. 
+
+Both methods allows us to avoid duplicating data in the DB and can pontentially speed up queries. 
+
+
+### firstOrCreate()
+
+```
+# first parameter: Tries to find a match based on a key value pairs
+# second parameter: If no matching record is found based on the 
+# first key value-pair.
+Post::firstOrCreate([], []);
+
+$array1 = [
+    "title"        => "Eloquent is awesome",
+];
+
+$array2 = [
+    "user_id"      => 4,
+    "title"        => "First or create",
+    "slug"         => "first-or-create",
+    "excerpt"      => "Test excerpt: First or create",
+    "description"  => "Test desc: First or create",
+    "is_published" => false,
+    "min_to_read"  => 2
+]
+
+Post::firstOrCreate( $array1, $array2 );
+```
+
+**Situational**
+```
+$post = Post::where('title', 'my title')->first() ?: Post::create($array2);
+```
+Better using `firstOrCreate()` that the code above.
+
+
+### firstOrNew()
+
+This method used for retrieve a record if it exists or creates a new one if it doesn't.
+
+Similar to `firstOrCreate()`, but instead of creating a new record, if one is not found, it simply returns a new instance of the model with a given attribute sets. 
+
+```
+$array1 = [
+    "title"        => "Eloquent is awesome",
+];
+
+$array2 = [
+    "user_id"      => 4,
+    "title"        => "First or create",
+    "slug"         => "first-or-create",
+    "excerpt"      => "Test excerpt: First or create",
+    "description"  => "Test desc: First or create",
+    "is_published" => false,
+    "min_to_read"  => 2
+]
+
+Post::firstOrNew( $array1, $array2 );
+```
+
+Both are useful methods for avoiding duplicate data in the DB and speeding up queries. 
+
+They require more code than the create() method and slower for complex queries.
