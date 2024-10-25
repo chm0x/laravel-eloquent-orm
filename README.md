@@ -387,3 +387,56 @@ $post = Post::create([
 
 dd($post->title);
 ```
+
+## RETRIEVING ALL MODELS/DATA
+
+### all()
+
+disadvantage: It retrieves all records from a table at once, which can cause performance issues. **Not recommended when you are handling large datasets**.
+
+It used to retrieving all records from a table.
+
+`app/Http/Controllers/PostController.php`
+```
+$posts = Post::all();
+
+
+Post::all()->count();
+```
+
+### paginate()
+
+**Recommended for large datasets**. 
+
+Default: 15 rows. 
+
+```
+Post::paginate();
+
+Post::paginate(5);
+
+Post::paginate()->count();
+```
+
+### simplePaginate()
+```
+Post::simplePaginate()
+
+Post::simplePaginate(5)
+```
+
+### cursorPaginate()
+
+**More efficient when dealing with large datasets**.
+
+```
+Post::cursorPaginate();
+
+Post::cursorPaginate(5);
+```
+
+**Recommendations**:
+
+* Small data -> all()
+* Large data -> paginate() or cursorPaginate()
+
