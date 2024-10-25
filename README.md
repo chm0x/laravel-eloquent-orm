@@ -307,3 +307,83 @@ Post::where('slug','requiem')
 
 If not exists, return an Exception.
 
+
+## INSERTING/CREATING MODELS
+
+
+### Model Instance
+
+A **model instance** refers to an instance of a model class, which is a representation of a DB table.
+**Option 1**:
+`App\Http\Controllers\PostController.php`
+```
+...
+use App\Models\Post;
+
+$post = new Post;
+
+# Insert values to the column
+$post->user_id      = 15;
+$post->title        = "Test title";
+$post->slug         = "test-title";
+$post->excerpt      = "Test excerpt";
+$post->description  = "Test description";
+$post->is_published = false;
+$post->min_to_read  = 4;
+
+# Saving/Inserting data to DB.
+# Returns boolean type.
+$post->save();
+...
+```
+
+### fill()
+**Option 2**
+`App\Http\Controllers\PostController`
+```
+use App\Models\Post
+
+$post = new Post;
+
+$post->fill([
+    "user_id"      => 4,
+    "title"        => "Test title 2",
+    "slug"         => "test-title-2",
+    "excerpt"      => "Test excerpt 2",
+    "description"  => "Test description 2",
+    "is_published" => false,
+    "min_to_read"  => 1
+]);
+
+$post->save()
+```
+
+### create()
+**Option 3***
+
+**Dont need to use save() anymore.**
+```
+Post::create([
+    "user_id"      => 4,
+    "title"        => "Eloquent is awesome",
+    "slug"         => "eloquent-is-awesome",
+    "excerpt"      => "Test excerpt: Eloquen is awesome 1",
+    "description"  => "Test desc: Eloquen is awesome 1",
+    "is_published" => true,
+    "min_to_read"  => 5
+]);
+```
+
+```
+$post = Post::create([
+    "user_id"      => 4,
+    "title"        => "Eloquent is awesome",
+    "slug"         => "eloquent-is-awesome",
+    "excerpt"      => "Test excerpt: Eloquen is awesome 1",
+    "description"  => "Test desc: Eloquen is awesome 1",
+    "is_published" => true,
+    "min_to_read"  => 5
+]);
+
+dd($post->title);
+```
