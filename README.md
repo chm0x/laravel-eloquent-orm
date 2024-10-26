@@ -629,3 +629,50 @@ if($post->wasChanged('title')){
 ```
 
 Example in real life: An Ecommerce app that allows users to edit their shipping information, if a user updates their shipping address but have not yet submitted a form, the `wasChanged()` method can be used to determine whether the adverse fields have been modified.
+
+## UPDATE RECORDS
+
+### updateOrCreate()
+
+Case use: It when working with forms or APIs when you may need to update an existing records or create a new one if it doesn't exist.
+
+This method allows you to update an existing record or create a new one if it does not exist.
+```
+# takes 2 arguments
+# arg1: an array to find the record by an array of  attributes to update
+# or create a record with. 
+# arg2: update data
+$post = Post::updateOrCreate([
+    'id' => 1
+], [
+    "user_id"      => 4,
+    "title"        => "Update or Create 1 ",
+    "slug"         => "update-or-create-1",
+    "excerpt"      => "Test excerpt: update or create",
+    "description"  => "Test desc: Update or create",
+    "is_published" => false,
+    "min_to_read"  => 2
+])
+```
+
+### upsert()
+
+The difference is that you don't need to se the `'id' => 1`. 
+
+```
+# Has 2 arguments
+# arg1: An array of values that you want to insert OR update.
+# arg2: An array of unique keys to find the record by. 
+Post::upsert([],[]);
+
+Post::upsert([
+    'id' => 10,
+    'user_id' => 18,
+    'title' => 'Boulevard of the broken dreams',
+    'slug' => 'boulevard-of-the-broken-dreams',
+    'excerpt' => 'exc boulevard',
+    'description' => 'upserting',
+    'is_published' => true,
+
+],[ 'id' ]);
+```
