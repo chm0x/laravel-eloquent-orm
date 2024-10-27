@@ -825,3 +825,113 @@ $post->replicate()->fill([
     'slug' => 'replicated-slug'
 ]);
 ```
+
+## GLOBAL SCOPES 
+
+Global scopes are a powerful feature of eloquent that allow you to add constraints to all Queries that run against a particular model.
+
+Real life scenario: working on an ecommerce platform and you want to ensure that all queries against a product model exclude any item that are out of stock. You can definel **global scope** that filters out any products with a stock count of zero. *This way you can avoid a hassle of manually adding the `where()` clause to **every query** that includes the product model*&.
+
+Two examples, the first one is simple and other is difficult: 
+
+### first example
+
+On terminal. You must need to create a new Global Scope
+```
+> php artisan make:scope BalanceVerifiedScope
+```
+
+It will created a directory and files on `app/Models/Scopes/BalanceVerifiedScope.php`.
+
+`app/Models/Scopes/BalanceVerifiedScope.php`
+```
+public function apply(Builder $builder, Model $model): void
+{
+    $builder->where('balance', '<', 850);
+}
+```
+
+`app/Models/User`
+
+This code, on `booted()`,   ensures that any query that's run against the user model will automatically include the constraint defined in the apply methods of the `BalanceVerifiedScope`.
+```
+class User extends Authenticable
+{
+    use HasApiTokens, HasFactory, Notifiable;
+
+    # This method is a lifecycle hook in laravel that is called
+    # when a model is booted. 
+    # It can be used to define model event listener or to perform
+    # other initialization tasks
+    protected static function booted():void
+    {  
+        # Adding a Global Scope
+        static::addGlobalScope(new BalanceVerifiedScope);
+
+    }
+
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+    ];
+    ...
+}
+```
+
+Testing
+```
+use App\Models\User;
+
+# Show different because the Balance's query is activated/automate, without typing where() method.
+User::all();
+```
+
+### second example
+
+Example: On Post, ensure that any query that's run against the post model only **includes posts that were published within last 30 days**. Publicaciones que se publicaron en los últimos 30 días.
+
+On CLI
+```
+> php artisan make:scope PublishedWithinThirtyDaysScope
+```
+
+`PublishedWithinThirtyDaysScope`
+```
+public function apply(Builder $builder, Model $model): void
+{
+    # Despues de 30 días de su creación
+    $builder->where('created_at', '>=', now()->subDays(30) );
+}
+```
+
+`app/Models/Post`
+```
+...
+use HasFactory, SoftDeletes, Prunable;
+
+protected static function booted(): void
+{
+    static::addGlobalScope(new PublishedWithinThirtyDaysScope );
+}
+
+protected $fillable = []
+
+...
+```
+
+On tinker
+```
+Post::all()
+```
+
+### withoutGlobalScopes()
+
+You can see without Global Scopes
+```
+Post::withoutGlobalScopes()->get();
+
+Post::withoutGlobalScopes()->get()->count();
+```
+
+Quick summary: Global Scopes allows you to add constraints to **all queries** that run against a particular models. 

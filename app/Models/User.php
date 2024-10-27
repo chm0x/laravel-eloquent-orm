@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Models\Scopes\BalanceVerifiedScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -17,6 +19,17 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+
+    # This method is a lifecycle hook in laravel that is called
+    # when a model is booted. 
+    # It can be used to define model event listener or to perform
+    # other initialization tasks
+    protected static function booted():void
+    {  
+        # Adding a Global Scope
+        static::addGlobalScope(new BalanceVerifiedScope() );
+
+    }
     protected $fillable = [
         'name',
         'email',
