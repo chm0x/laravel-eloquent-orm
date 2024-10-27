@@ -1014,3 +1014,26 @@ Post::publishedByUser(2);
 ```
 
 **DISADVANTAGES**: They can be more difficult to understand and implement than traditional scopes, and they also may require more advanced knowledge of Laravel Square Rebuilder.
+
+
+## TRAITS
+
+Traits are an important part of code reuse and organization. They are a way of sharing functionality between classes, which can help *reduce code duplication* and improve maintabinability over time.
+
+Trais are pretty similar to classes in that they can contain methods and properties, but they cannot be instantiated on their own.
+
+You can create Traits **manually**.
+
+Steps:
+1. create a file on `app/Models/PostScopes.php`
+2. You can write on `app/Models/Post.php`
+
+```
+...
+use HasFactory, SoftDeletes, Prunable, PostScopes;
+...
+```
+
+On the `PostScopes.php` file, you can copy all methods and paste it. 
+
+The result is the same.
