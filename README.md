@@ -995,3 +995,22 @@ Post::published()
 
 Post::witUserData()->published();
 ```
+
+## DYNAMIC SCOPE
+
+The dynamic scope allow you to specific the condition that you want to filter by.
+
+```
+public function scopePublishedByUser(Builder $builder, $userID): Builder | QueryBuilder
+{
+    return $builder->where('user_id', $userID)
+                    ->whereNotNUll('created_at');
+}
+```
+
+Testing on Tinker
+```
+Post::publishedByUser(2);
+```
+
+**DISADVANTAGES**: They can be more difficult to understand and implement than traditional scopes, and they also may require more advanced knowledge of Laravel Square Rebuilder.
