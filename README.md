@@ -708,3 +708,72 @@ Post::destroy([1,2,3]);
 # single records
 Post::destroy(1);
 ```
+
+## SOFT DELETES 
+
+When you deletes records from your DB, it's permanently deleted. It's means that if you don't have a backup, it's gone forever. 
+
+**Soft deleting** provides a way to mark  a record as  deleted without actually removing it from DB. 
+
+Column: `delete_at`
+
+**YOU NEED TO ENABLE SOFT DELETING IN THE ELOQUENT MODEL** (using traits)
+
+On `App\Models\Post`
+```
+class Post
+{
+    use HasFactory, SoftDeletes;
+}
+```
+
+Then
+```
+$post = Post::find(5);
+
+# The record was "deleted" but not in DB. 
+$post->delete()
+
+# returns null. But in DB exist.
+Post::fiind(5);
+```
+
+Behind scenes.
+```
+# Excludes deleted_at
+select * from posts where deleted_at is null order by created_at desc;
+```
+
+### retrieving soft deletes
+
+#### withTrashed()
+
+This method will retrieves all records, including ones that have been soft deleted. 
+```
+Post::withTrashed()
+    ->orderBy('id', 'desc')
+    ->get();
+```
+
+#### restore()
+Recuperar el ultimo registro
+```
+Post::withTrashed()
+    ->where('id', 5)
+    ->restore();
+```
+
+### PERMANENTLY REMOVED
+
+```
+# first
+$post = Post::find(1);
+$post->delete()
+
+# then
+$post_trash = Post::withTrashed()
+    ->find(1);
+
+$post->forceDelete();
+```
+
