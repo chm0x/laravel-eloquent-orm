@@ -676,3 +676,35 @@ Post::upsert([
 
 ],[ 'id' ]);
 ```
+
+## DELETING ROW(S)
+
+### delete()
+
+This method is a simple way to delete a single model instance. 
+
+```
+$post = Post::find(1);
+
+$post->delete();
+```
+
+### truncate() 
+
+
+**warning**:This method is used to delete all records from a table. And, also, reset the auto_increment ID to ZERO.
+```
+Post::truncate();
+```
+
+### destroy()
+
+This method is used to delete **multiple records** from a table. And, also, you can delete 1 record.
+
+```
+# Multiple records
+Post::destroy([1,2,3]);
+
+# single records
+Post::destroy(1);
+```
