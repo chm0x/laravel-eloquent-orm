@@ -792,7 +792,7 @@ class Post extends Model
     use HasFactory, SoftDeletes, Prunable;
     ...
     ...
-    
+
     public function prunable() 
     {
         # Every time a soft deleted row has been deleted almost a month ago.
@@ -802,3 +802,26 @@ class Post extends Model
 ```
 
 
+## REPLICATING MODELS
+
+
+### replicate()
+
+```
+$post = Post::create([
+    'user_id' => 1,
+    'title' => 'Replicating Models',
+    'slug' => 'replicate',
+    'excerpt' => 'replicate',
+    'description' => 'desc replicate',
+    'is_published' => false,
+]);
+
+$post->replicate();
+
+# Use fill() when you have issues about unique fields.
+$post->replicate()->fill([
+    'title' => 'REPLICATED',
+    'slug' => 'replicated-slug'
+]);
+```
