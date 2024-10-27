@@ -935,3 +935,63 @@ Post::withoutGlobalScopes()->get()->count();
 ```
 
 Quick summary: Global Scopes allows you to add constraints to **all queries** that run against a particular models. 
+
+## LOCAL SCOPES
+
+The local scope are a powerful feature in eloquent that enables us to define a set of reusable queries on our models. They provide  a way to encapsulate a query into a method on the model and enable us to write more concise and expresive code. Using local scopes makes it easier to maintain and modify your code over time as we can make changes to the query logic in one central location.
+
+On top that, they can also be chained together to create more complex queries. 
+
+***A local scope needs to be stored inside a model you're going to define the scope for.***
+
+**A local scope has a name convention, it has to start with a prefix of the name `scope`, followed by a descriptive name.** 
+
+Example:
+`app/Models/Post`
+```
+# Use both
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\Builder as QueryBuilder;
+
+class Post extend Model
+{
+    ...
+    [fillable, etc]
+    ...
+
+    # It accepts one argument, which is an instance of the builder class.
+    public function scopePublished(Builder $builder): Builder | QueryBuilder
+    {
+        return $builder->where('is_published', true);
+    }
+}
+```
+
+To testing on Tinker.
+
+Observation: **you don't need to write 'scope', only the next to the scope and start with lowercase**. 
+*It looks like a method*.
+```
+Post::published()
+```
+
+Another example
+```
+public function scopeWithUserData(Builder $builder): Builder | QueryBuilder
+{
+    return $builder->join('users', 'posts.user_id', '=', 'users.id')
+                ->select('posts.*', 'users.name', 'users.email');
+}
+```
+
+Testing on Tinker:
+```
+Post::withUserData()->get();
+
+# we can chain together
+Post::published()
+    ->withUserData()
+    ->get();
+
+Post::witUserData()->published();
+```
