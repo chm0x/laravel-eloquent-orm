@@ -12,7 +12,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+        # Hacer el cronograma para limpiar el soft delete dentro de la base de datos
+        $schedule->command('model:prune')->daily();
     }
 
     /**

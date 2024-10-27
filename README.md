@@ -777,3 +777,28 @@ $post_trash = Post::withTrashed()
 $post->forceDelete();
 ```
 
+## PRUNING MODEL
+
+La base de datos puede volverse desordenada si no elimina los registros del `soft deleted` temporalmente después de un cierto período de tiempo. Laravel ofrece una "limpieza"(prune) a los modelos del base de datos. Lo cual es una excelente manera de eliminar **datos obsoletos** de la base de datos.
+
+You need to **enable the prune table trait**. With `Prunable`.
+
+On `App\Models\Post`
+```
+use Illuminate\Database\Eloquent\Prunable;
+
+class Post extends Model
+{
+    use HasFactory, SoftDeletes, Prunable;
+    ...
+    ...
+    
+    public function prunable() 
+    {
+        # Every time a soft deleted row has been deleted almost a month ago.
+        return static::where('deleted_at', '<=', now()->subMonth() );
+    }
+}
+```
+
+
